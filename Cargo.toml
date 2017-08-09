@@ -1,0 +1,5 @@
+[package]
+name = "aeropi"
+authors = ["Michael Spencer <sonrisesoftware@gmail.com>"]
+publish = false
+version = "0.1.0"
