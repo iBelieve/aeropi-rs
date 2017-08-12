@@ -3,7 +3,8 @@ use std::{thread, time};
 use std::fs::{self, File};
 use std::io::prelude::*;
 use i2c::I2C;
-use math::{twos_comp_combine, Coordinates};
+use config::AccelerometerCalibration;
+use math::{twos_comp_combine, Vec3};
 
 const CALIBRATION_ITERATIONS: u8 = 50;
 const ACCELERATION_SCALE_FACTOR: f32 = 0.001;
@@ -33,14 +34,14 @@ const ACC_Z_MSB: u8 = 0x2D;
 
 pub struct Accelerometer {
     i2c: I2C,
-    offsets: Coordinates
+    offsets: Vec3
 }
 
 impl Accelerometer {
     pub fn new() -> Self {
         Accelerometer {
             i2c: I2C::new(LSM_ADDRESS),
-            offsets: Coordinates::zero()
+            offsets: Vec3::zero()
         }
     }
 
@@ -53,9 +54,9 @@ impl Accelerometer {
         // self.i2c.write8(CTRL_7, 0x00)  // get magnetometer out of low power mode
     }
 
-    pub fn calibrate(&mut self) {
+    pub fn calibrate(&mut self) -> AccelerometerCalibration {
         println!("Calibrating accelerometer...");
-        let mut offsets = Coordinates::zero();
+        let mut offsets = Vec3::zero();
         let calibration_interval = time::Duration::from_millis(20);
 
         for _ in 0..CALIBRATION_ITERATIONS {
@@ -67,34 +68,21 @@ impl Accelerometer {
 
         println!("Calibrated accelerometer, offsets are {}", self.offsets);
 
-        let mut file = File::create(CALIBRATION_DATA_FILENAME)
-            .expect("Unable to write saved accelerometer calibration offsets");
-        write!(file, "{}\n{}\n{}", self.offsets.x, self.offsets.y, self.offsets.z);
-    }
-
-    pub fn load_calibration(&mut self) {
-        if let Ok(mut file) = File::open(CALIBRATION_DATA_FILENAME) {
-            let mut buffer = String::new();
-            file.read_to_string(&mut buffer)
-                .expect("Unable to read saved accelerometer calibration offsets");
-            let xyz: Vec<&str> = buffer.split('\n').collect();
-            assert_eq!(xyz.len(), 3, "Expected three lines for X, Y, and Z");
-            self.offsets = Coordinates {
-                x: f32::from_str(xyz[0]).unwrap(),
-                y: f32::from_str(xyz[1]).unwrap(),
-                z: f32::from_str(xyz[2]).unwrap()
-            };
-        } else {
-            self.calibrate();
+        AccelerometerCalibration {
+            offsets: self.offsets
         }
     }
 
-    pub fn read(&mut self) -> Coordinates {
+    pub fn set_calibration(&mut self, calibration: &AccelerometerCalibration) {
+        self.offsets = calibration.offsets;
+    }
+
+    pub fn read(&mut self) -> Vec3 {
         (self.read_raw() - self.offsets) * ACCELERATION_SCALE_FACTOR
     }
 
-    fn read_raw(&mut self) -> Coordinates {
-        Coordinates {
+    fn read_raw(&mut self) -> Vec3 {
+        Vec3 {
             x: twos_comp_combine(self.i2c.read8(ACC_X_MSB), self.i2c.read8(ACC_X_LSB)) as f32,
             y: twos_comp_combine(self.i2c.read8(ACC_Y_MSB), self.i2c.read8(ACC_Y_LSB)) as f32,
             z: twos_comp_combine(self.i2c.read8(ACC_Z_MSB), self.i2c.read8(ACC_Z_LSB)) as f32

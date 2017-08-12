@@ -1,5 +1,6 @@
 mod accelerometer;
 
+use config::Calibration;
 use self::accelerometer::Accelerometer;
 
 pub struct Sensors {
@@ -13,15 +14,24 @@ impl Sensors {
         }
     }
 
-    pub fn init(&mut self) {
+    pub fn init(&mut self, calibration: Option<&Calibration>) -> Option<Calibration> {
         self.accelerometer.enable();
-        self.accelerometer.load_calibration();
-        println!("Sensors initialized.");
+
+        if let Some(calibration) = calibration {
+            self.accelerometer.set_calibration(&calibration.accelerometer);
+            None
+        } else {
+            Some(Calibration {
+                accelerometer: self.accelerometer.calibrate()
+            })
+        }
     }
 
-    pub fn calibrate(&mut self) {
+    pub fn calibrate(&mut self) -> Calibration {
         self.accelerometer.enable();
-        self.accelerometer.calibrate();
-        println!("Sensors calibrated.");
+        
+        Calibration {
+            accelerometer: self.accelerometer.calibrate()
+        }
     }
 }

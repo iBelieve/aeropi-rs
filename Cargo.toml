@@ -1,5 +1,10 @@
 [package]
-name = "aeropi"
 authors = ["Michael Spencer <sonrisesoftware@gmail.com>"]
+name = "aeropi"
 publish = false
 version = "0.1.0"
+
+[dependencies]
+serde = "*"
+serde_derive = "*"
+serde_yaml = "*"
