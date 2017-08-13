@@ -1,8 +1,6 @@
-use std::fs::File;
 use config::Calibration;
 use motors::{self, Motor};
 use sensors::Sensors;
-use serde_yaml;
 
 pub struct FlightController {
     sensors: Sensors,
@@ -18,17 +16,17 @@ impl FlightController {
     }
 
     pub fn init(&mut self) {
-        let calibration = load_calibration();
+        let calibration = Calibration::load();
 
         self.sensors.init(calibration.as_ref())
-            .map(|c| save_calibration(&c));
+            .map(|calibration| calibration.save());
 
         println!("Flight controller initialized.");
     }
 
     pub fn calibrate(&mut self) {
         let calibration = self.sensors.calibrate();
-        save_calibration(&calibration);
+        calibration.save();
 
         println!("Flight controller calibrated.");
     }
@@ -38,17 +36,4 @@ impl FlightController {
             motor.update(pitch_out, roll_out, yaw_out, vert_out);
         }
     }
-}
-
-fn load_calibration() -> Option<Calibration> {
-    File::open("calibration.yml").ok()
-        .and_then(|file| serde_yaml::from_reader(&file).ok())
-}
-
-fn save_calibration(calibration: &Calibration) {
-    let file = File::create("calibration.yml")
-        .expect("Unable to create calibration file");
-    serde_yaml::to_writer(&file, calibration)
-        .expect("Unable to save calibration data");
-    println!("Saved updated calibration.");
 }
