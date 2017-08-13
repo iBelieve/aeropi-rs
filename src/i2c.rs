@@ -12,10 +12,11 @@ impl I2C {
     }
 
     pub fn write8(&mut self, register: u8, value: u8) {
-
+        // TODO: Implement this
     }
 
     pub fn read8(&mut self, register: u8) -> u8 {
+        // TODO: Implement this
         0
     }
 }

@@ -3,13 +3,13 @@ use math::Vec3;
 use serde_yaml;
 
 #[derive(Serialize, Deserialize, PartialEq)]
-pub struct Calibration {
-    pub accelerometer: AccelerometerCalibration
+pub struct AccelerometerCalibration {
+    pub offsets: Vec3
 }
 
 #[derive(Serialize, Deserialize, PartialEq)]
-pub struct AccelerometerCalibration {
-    pub offsets: Vec3
+pub struct Calibration {
+    pub accelerometer: AccelerometerCalibration
 }
 
 impl Calibration {
@@ -22,6 +22,6 @@ impl Calibration {
         let file = File::create("calibration.yml")
             .expect("Unable to create calibration file");
         serde_yaml::to_writer(&file, self)
-            .expect("Unable to save calibration data");
+            .expect("Unable to write calibration data");
     }
 }

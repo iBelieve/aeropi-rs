@@ -14,7 +14,7 @@ enum MotorLocation {
     BackRight
 }
 
-pub struct Motor {
+struct Motor {
     location: MotorLocation
 }
 
@@ -58,11 +58,29 @@ impl Motor {
     }
 }
 
-pub fn all() -> [Motor; 4] {
-    [
-        Motor::new(MotorLocation::FrontLeft),
-        Motor::new(MotorLocation::FrontRight),
-        Motor::new(MotorLocation::BackLeft),
-        Motor::new(MotorLocation::BackRight)
-    ]
+pub struct Motors {
+    motors: [Motor; 4]
+}
+
+impl Motors {
+    pub fn new() -> Self {
+        Motors {
+            motors: [
+                Motor::new(MotorLocation::FrontLeft),
+                Motor::new(MotorLocation::FrontRight),
+                Motor::new(MotorLocation::BackLeft),
+                Motor::new(MotorLocation::BackRight)
+            ]
+        }
+    }
+
+    pub fn init(&mut self) {
+        // TODO: Initialize the motors
+    }
+
+    pub fn update(&mut self, pitch_out: i32, roll_out: i32, yaw_out: i32, vert_out: i32) {
+        for motor in &mut self.motors {
+            motor.update(pitch_out, roll_out, yaw_out, vert_out);
+        }
+    }
 }
