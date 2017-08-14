@@ -4,7 +4,7 @@ use config::AccelerometerCalibration;
 use math::{twos_comp_combine, Vec3};
 
 const CALIBRATION_ITERATIONS: u8 = 50;
-const ACCELERATION_SCALE_FACTOR: f32 = 0.001;
+const ACCELERATION_SCALE_FACTOR:f64 = 0.001;
 
 const LSM_ADDRESS: u8 = 0x1d; // Device I2C slave address
 const LSM_WHOAMI: u8 = 0b1001001; // Device self-id
@@ -60,7 +60,7 @@ impl Accelerometer {
             thread::sleep(calibration_interval);
         }
 
-        self.offsets = offsets / (CALIBRATION_ITERATIONS as f32);
+        self.offsets = offsets / (CALIBRATION_ITERATIONS as f64);
 
         println!("Calibrated accelerometer, offsets are {}", self.offsets);
 
@@ -79,9 +79,9 @@ impl Accelerometer {
 
     fn read_raw(&mut self) -> Vec3 {
         Vec3 {
-            x: twos_comp_combine(self.i2c.read8(ACC_X_MSB), self.i2c.read8(ACC_X_LSB)) as f32,
-            y: twos_comp_combine(self.i2c.read8(ACC_Y_MSB), self.i2c.read8(ACC_Y_LSB)) as f32,
-            z: twos_comp_combine(self.i2c.read8(ACC_Z_MSB), self.i2c.read8(ACC_Z_LSB)) as f32
+            x: twos_comp_combine(self.i2c.read8(ACC_X_MSB), self.i2c.read8(ACC_X_LSB)) as f64,
+            y: twos_comp_combine(self.i2c.read8(ACC_Y_MSB), self.i2c.read8(ACC_Y_LSB)) as f64,
+            z: twos_comp_combine(self.i2c.read8(ACC_Z_MSB), self.i2c.read8(ACC_Z_LSB)) as f64
         }
     }
 }

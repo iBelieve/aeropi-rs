@@ -1,22 +1,30 @@
 use std::fmt;
 use std::ops::{AddAssign,Sub,Div,Mul};
+use ndarray::Array2;
+use num::Num;
 
 #[derive(Copy, Clone, Serialize, Deserialize, PartialEq)]
-pub struct Vec3 {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32
+pub struct Vec3<T: Num> {
+    pub x: T,
+    pub y: T,
+    pub z: T
 }
 
-impl Vec3 {
+impl<T: Num> Vec3<T> {
     pub fn zero() -> Self {
         Vec3 {
-            x: 0.0, y: 0.0, z: 0.0
+            x: T::zero(), y: T::zero(), z: T::zero()
         }
     }
 }
 
-impl fmt::Display for Vec3 {
+impl<T: Num + Copy> Vec3<T> {
+    pub fn as_matrix(&self) -> Array2<T> {
+        array![[self.x, self.y, self.z]]
+    }
+}
+
+impl<T: Num + fmt::Display> fmt::Display for Vec3<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // The `f` value implements the `Write` trait, which is what the
         // write! macro is expecting. Note that this formatting ignores the
@@ -25,7 +33,7 @@ impl fmt::Display for Vec3 {
     }
 }
 
-impl AddAssign for Vec3 {
+impl<T: Num + AddAssign> AddAssign for Vec3<T> {
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
@@ -33,10 +41,10 @@ impl AddAssign for Vec3 {
     }
 }
 
-impl Div<f32> for Vec3 {
+impl<T: Num + Copy> Div<T> for Vec3<T> {
     type Output = Self;
 
-    fn div(self, rhs: f32) -> Self {
+    fn div(self, rhs: T) -> Self {
         Vec3 {
             x: self.x / rhs,
             y: self.y / rhs,
@@ -45,10 +53,10 @@ impl Div<f32> for Vec3 {
     }
 }
 
-impl Mul<f32> for Vec3 {
+impl<T: Num + Copy> Mul<T> for Vec3<T> {
     type Output = Self;
 
-    fn mul(self, rhs: f32) -> Self {
+    fn mul(self, rhs: T) -> Self {
         Vec3 {
             x: self.x * rhs,
             y: self.y * rhs,
@@ -57,7 +65,7 @@ impl Mul<f32> for Vec3 {
     }
 }
 
-impl Sub for Vec3 {
+impl<T: Num> Sub for Vec3<T> {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
@@ -66,5 +74,29 @@ impl Sub for Vec3 {
             y: self.y - rhs.y,
             z: self.z - rhs.z
         }
+    }
+}
+
+// Matrix math
+
+impl<T: Num> From<Array2<T>> for Vec3<T> {
+    fn from(matrix: Array2<T>) -> Self {
+        Vec3::zero()
+    }
+}
+
+impl<T: Num + Copy> Mul<Array2<T>> for Vec3<T> {
+    type Output = Self;
+
+    fn mul(self, rhs: Array2<T>) -> Self {
+        Vec3::from(self.as_matrix() * rhs)
+    }
+}
+
+impl<T: Num + Copy> Div<Array2<T>> for Vec3<T> {
+    type Output = Self;
+
+    fn div(self, rhs: Array2<T>) -> Self {
+        Vec3::from(self.as_matrix() / rhs)
     }
 }

@@ -1,3 +1,7 @@
+extern crate num;
+#[macro_use]
+extern crate ndarray;
+extern crate pid_control;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_yaml;
