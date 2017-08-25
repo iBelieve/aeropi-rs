@@ -3,8 +3,8 @@ authors = ["Michael Spencer <sonrisesoftware@gmail.com>"]
 name = "aeropi"
 publish = false
 version = "0.1.0"
-
 [dependencies]
+i2cdev = "*"
 ndarray = "*"
 num = "*"
 pid_control = "*"

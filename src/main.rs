@@ -1,3 +1,6 @@
+#![feature(catch_expr)]
+
+extern crate i2cdev;
 extern crate num;
 #[macro_use]
 extern crate ndarray;
@@ -8,7 +11,6 @@ extern crate serde_yaml;
 
 mod config;
 mod controller;
-mod i2c;
 mod math;
 mod motors;
 mod sensors;

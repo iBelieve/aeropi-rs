@@ -27,7 +27,7 @@ impl Sensors {
     }
 
     pub fn init(&mut self, calibration: Option<&Calibration>) -> Option<Calibration> {
-        self.accelerometer.enable();
+        self.accelerometer.init();
 
         if let Some(calibration) = calibration {
             self.accelerometer.set_calibration(&calibration.accelerometer);
@@ -40,7 +40,7 @@ impl Sensors {
     }
 
     pub fn calibrate(&mut self) -> Calibration {
-        self.accelerometer.enable();
+        self.accelerometer.init();
 
         Calibration {
             accelerometer: self.accelerometer.calibrate()
