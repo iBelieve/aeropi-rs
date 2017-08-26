@@ -1,22 +1,7 @@
-#![feature(catch_expr)]
-
-extern crate i2cdev;
-extern crate num;
-#[macro_use]
-extern crate ndarray;
-extern crate pid_control;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_yaml;
-
-mod config;
-mod controller;
-mod math;
-mod motors;
-mod sensors;
+extern crate aeropi;
 
 use std::env;
-use controller::FlightController;
+use aeropi::FlightController;
 
 fn main() {
     let mut args = env::args().skip(1);
