@@ -1,4 +1,5 @@
-use std::{thread, time};
+use std::thread;
+use std::time::Duration;
 use i2cdev::core::*;
 use i2cdev::linux::{LinuxI2CDevice, LinuxI2CError};
 use config::AccelerometerCalibration;
@@ -41,7 +42,7 @@ impl Accelerometer {
         Accelerometer {
             i2c: LinuxI2CDevice::new("/dev/i2c-1", LSM_ADDRESS)
                 .expect("Unable to connect to the i2c bus"),
-            offsets: Vec3::zero(),
+            offsets: Vec3::zeros(),
         }
     }
 
@@ -67,8 +68,8 @@ impl Accelerometer {
 
     pub fn calibrate(&mut self) -> AccelerometerCalibration {
         println!("Calibrating accelerometer...");
-        let mut offsets = Vec3::zero();
-        let calibration_interval = time::Duration::from_millis(20);
+        let mut offsets = Vec3::zeros();
+        let calibration_interval = Duration::from_millis(50);
 
         for _ in 0..CALIBRATION_ITERATIONS {
             offsets += self.read_raw().expect("Unable to read acceleration");
@@ -93,13 +94,13 @@ impl Accelerometer {
     }
 
     fn read_raw(&mut self) -> Result<Vec3, LinuxI2CError> {
-        Ok(Vec3 {
-            x: twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_X_MSB)?,
+        Ok(Vec3::new(
+            twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_X_MSB)?,
                                  self.i2c.smbus_read_byte_data(ACC_X_LSB)?) as f64,
-            y: twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_Y_MSB)?,
+            twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_Y_MSB)?,
                                  self.i2c.smbus_read_byte_data(ACC_Y_LSB)?) as f64,
-            z: twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_Z_MSB)?,
+            twos_comp_combine(self.i2c.smbus_read_byte_data(ACC_Z_MSB)?,
                                  self.i2c.smbus_read_byte_data(ACC_Z_LSB)?) as f64,
-        })
+        ))
     }
 }

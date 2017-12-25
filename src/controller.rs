@@ -18,7 +18,7 @@ impl FlightController {
         FlightController {
             sensors: Sensors::new(),
             motors: Motors::new(),
-            target_velocity: Vec3::zero(),
+            target_velocity: Vec3::zeros(),
             // TODO: Pick the right constants for the three PIDs
             aligned_vx_pid: PIDController::new(1.0, 1.0, 1.0),
             aligned_vy_pid: PIDController::new(1.0, 1.0, 1.0),

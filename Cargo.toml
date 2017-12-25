@@ -3,10 +3,10 @@ authors = ["Michael Spencer <sonrisesoftware@gmail.com>"]
 name = "aeropi"
 publish = false
 version = "0.1.0"
+
 [dependencies]
 i2cdev = "*"
-ndarray = "*"
-num = "*"
+nalgebra = { version = "*", features = ["serde-serialize"] }
 pid_control = "*"
 serde = "*"
 serde_derive = "*"
