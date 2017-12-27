@@ -14,7 +14,6 @@ pub fn run() {
 pub fn test_distance_sensor() {
     println!("Testing distance sensor...");
     let sensor = HCSR04::new();
-    sensor.init();
 
     for _ in 1..10 {
         let distance = sensor.read_raw().expect("Unable to read distance");
