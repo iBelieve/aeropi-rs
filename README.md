@@ -14,7 +14,8 @@ Autonomous quadcopter flight controller in Rust using a Raspberry Pi.
 
 ### Hardware Setup
 
-Status LED: negative to ground, positive to 220 Ohm resistor to GPIO 17
+* Status LED on GPIO 17
+* HC SR04 ultrasonic distance sensor on GPIO 23 and 24
 
 ### Setup
 
@@ -22,7 +23,7 @@ Set up a new microSD card with Raspbian:
 
     ./scripts/raspbian.sh <SDCARD-DEV>
 
-Configure using ansible after booting:
+Configure using Ansible after booting:
 
     make config
 

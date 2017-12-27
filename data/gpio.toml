@@ -24,3 +24,13 @@
 num = 17
 names = ["status_led"]
 direction = "out"
+
+[[pins]]
+num = 23
+names = ["hcsr04_trigger"]
+direction = "out"
+
+[[pins]]
+num = 24
+names = ["hcsr04_echo"]
+direction = "in"
