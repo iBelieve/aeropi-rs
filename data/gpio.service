@@ -1,0 +1,12 @@
+[Unit]
+Description=Export GPIO pins for AeroPi
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/.cargo/bin/gpio export-all
+ExecStop=/home/pi/.cargo/bin/gpio unexport-all
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

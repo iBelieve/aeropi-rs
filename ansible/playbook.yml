@@ -1,0 +1,37 @@
+- hosts: all
+
+  vars:
+    cargo_dir: "{{ ansible_env.HOME }}/.cargo"
+
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ cargo_dir }}/bin"
+
+  tasks:
+    - name: Install Rust using rustup
+      shell: curl https://sh.rustup.rs -sSf | sh -s -- -y creates="{{ cargo_dir }}/bin/cargo"
+
+    - name: Install gpio-utils
+      shell: cargo install gpio-utils creates="{{ cargo_dir }}/bin/gpio"
+
+    - name: Set GPIO pins configuration
+      copy:
+        src: ../data/gpio.toml
+        dest: /etc/
+      become: true
+      notify: restart GPIO service
+
+    - name: Install GPIO systemd service
+      copy:
+        src: ../data/gpio.service
+        dest: /etc/systemd/system/
+      become: true
+      notify: restart GPIO service
+
+    - name: Ensure the GPIO service is enabled and running
+      systemd: name=gpio enabled=yes state=started
+      become: true
+
+  handlers:
+    - name: restart GPIO service
+      systemd: name=gpio state=restarted daemon_reload=yes
+      become: true

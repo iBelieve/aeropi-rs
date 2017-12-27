@@ -1,0 +1,26 @@
+#
+# Example GPIO configuration (e.g. /etc/gpio.toml)
+#
+# The main configuration consists of zero or more pins, each of which may have
+# the following keys:
+#
+# - `num`: Required.  The GPIO number.
+# - `names`: Required.  One or more names for the GPIO
+# - `direction`: Default: `"in"`.  Must be either "in" or "out"
+# - `active_low`: Default: `false`.  If set to true, the polarity of the pin will
+#    be reversed.
+# - `export`: Default: `true`.  If true, this GPIO will be automatically
+#    exported when `gpio export-all` is run (e.g. by an init script).
+#
+
+# [[pins]]
+# num = 73                 # required
+# names = ["reset_button"] # required (may have multiple)
+# direction = "in"         # default: in
+# active_low = false       # default: false (really means invert logic)
+# export = true            # default: true
+
+[[pins]]
+num = 17
+names = ["status_led"]
+direction = "out"

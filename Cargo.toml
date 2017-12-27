@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["Michael Spencer <sonrisesoftware@gmail.com>"]
 
 [dependencies]
+sysfs_gpio = "0.5.1"
+lazy_static = "1.0.0"

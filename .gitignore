@@ -1,6 +1,8 @@
 /target/
 **/*.rs.bk
 
+/ansible/*.retry
+
 /data/raspbian
 /data/*raspbian-stretch-lite.zip
 /data/*raspbian-stretch-lite.img

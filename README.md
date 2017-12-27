@@ -12,11 +12,19 @@ Autonomous quadcopter flight controller in Rust using a Raspberry Pi.
 * arm-linux-gnueabihf gcc cross-compiler (arm-linux-gnueabihf-gcc on the AUR for Arch Linux)
 * Raspbian Stretch Lite
 
+### Hardware Setup
+
+Status LED: negative to ground, positive to 220 Ohm resistor to GPIO 17
+
 ### Setup
 
 Set up a new microSD card with Raspbian:
 
     ./scripts/raspbian.sh <SDCARD-DEV>
+
+Configure using ansible after booting:
+
+    make config
 
 Log in via ssh after booting:
 

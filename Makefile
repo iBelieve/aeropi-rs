@@ -11,3 +11,6 @@ deploy: build
 
 run:
 	ssh pi@aeropi /home/pi/aeropi
+
+config:
+	ansible-playbook -i ansible/hosts ansible/playbook.yml
