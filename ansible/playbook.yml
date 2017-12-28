@@ -31,6 +31,12 @@
       systemd: name=gpio enabled=yes state=started
       become: true
 
+    - name: Enable the ARM I2C bus
+      lineinfile:
+        path: /boot/config.txt
+        regexp: '^#?dtparam=i2c_arm='
+        line: 'dtparam=i2c_arm=on'
+
   handlers:
     - name: restart GPIO service
       systemd: name=gpio state=restarted daemon_reload=yes
